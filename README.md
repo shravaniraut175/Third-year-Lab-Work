@@ -27,7 +27,7 @@ For queries or feedback, feel free to reach out!
 
 ---
 
-*Maintained by [Shravani Raut], third-year AI, Data Science & Engineering student.*
+*Maintained by [Shravani Raut], third-year Artificial Intelligence & Data Science Engineering student.*
 
 
 
