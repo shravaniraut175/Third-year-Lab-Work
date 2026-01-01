@@ -1,6 +1,4 @@
-# 📚Semester V Experiments - Artificial Intelligence & Data Science Engineering
-
-This folder contains the lab experiments conducted during Semester V for various courses in AI, Data Science, and Engineering.
+# 📚Semester V Experiments
 
 ## Experiment List
 
@@ -16,6 +14,8 @@ This folder contains the lab experiments conducted during Semester V for various
 9. Perform simulation of NAT on the router using Cisco Packet Tracer/GNS3.
 10. Perform simulation of Software Defined Network using Mininet.
 
+---
+
 ### 2️⃣CSL502 - Artificial Intelligence Lab
 1. Provide the PEAS description and TASK Environment for a given AI problem.
 2. Identify suitable Agent Architecture for the problem.
@@ -29,6 +29,8 @@ This folder contains the lab experiments conducted during Semester V for various
 10. Implement a Planning Agent.
 11. Design a prototype of an expert system.
 12. Case study of an existing successful AI system.
+
+---
 
 ### 3️⃣CSL503 - Data Warehousing and Mining
 1. Data Warehouse Construction
@@ -47,15 +49,3 @@ This folder contains the lab experiments conducted during Semester V for various
 9. Implement one association mining algorithm using Java/Python.
 10. Implement PageRank algorithm.
 11. Implement HITS algorithm.
-
----
-
-## How to Use This Folder
-
-- Each experiment is organized in its respective course subfolder.
-- You will find notebooks, scripts, documentation, and reports for each experiment.
-- The README or comments inside each experiment folder provide instructions, explanations, and results.
-
----
-
-*Maintained by [Shravani Raut], Third-Year Artificial Intelligence & Data Science Engineering Student.*
