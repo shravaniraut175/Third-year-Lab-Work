@@ -1,253 +1,287 @@
-﻿🧾 EXPERIMENT 1
+Experiment 2 - SLR
+install.packages("ggplot2")
+install.packages("dplyr")
+install.packages("plotly")
+
+data <- data.frame(
+X = (1,2,3,4,5),
+y = (12,19,29,37,45)
+)
+
+# Model
+model <- lm(y ~ X, data)
+
+# Coefficients
+coef_vals <- coef(model)
+
+# Prediction
+y_new <- predict(model, data.frame(X=6))
+
+# Print
+cat("Slope (m):", coef_vals[2],
+    "\nIntercept (c):", coef_vals[1],
+    "\nPredicted value at X=6:", y_new, "\n")
+
+# Plot
+plot(X, y, pch=16, xlim=c(1,6), ylim=c(10,80),
+     main="Simple Linear Regression",
+     xlab="Year", ylab="Expenditure")
+
+abline(model, col="blue")
+points(6, y_new, col="red", pch=16)
+
+text(2, 80,
+     paste("y =", round(coef_vals[2],2), "x +", round(coef_vals[1],2)),
+     col="darkgreen")
 
 
-This code loads the Iris dataset, handles missing values, normalizes the data, and visualizes it using line and histogram plots.
+Experiment 3 - MLR
+
+
+data <- data.frame(
+  x1 = c(4.0, 3.0, 1.6, 1.2, 3.4, 4.8),
+  x2 = c(1.5, 2.2, 1.0, 2.0, 0.8, 1.6),
+  Y  = c(160, 112, 69, 90, 123, 186)
+)
+
+# Model
+model <- lm(Y ~ x1 + x2, data)
+
+# Coefficients
+coef_vals <- coef(model)
+
+# Print coefficients
+cat("Intercept (a):", coef_vals[1],
+    "\nb1:", coef_vals[2],
+    "\nb2:", coef_vals[3], "\n")
+
+# Equation
+cat("Equation: Y =",
+    round(coef_vals[1],3), "+",
+    round(coef_vals[2],3), "X1 +",
+    round(coef_vals[3],3), "X2\n")
+
+# Prediction
+new <- data.frame(x1=3.7, x2=2.6)
+Y_pred <- predict(model, new)
+
+cat("Predicted Value:", round(Y_pred,3), "\n")
+
+
+
+
+Experiment 4 and 5 time series
+pip install pandas numpy matplotlib scikit-learn statsmodels
 
 
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.datasets import load_iris
+from statsmodels.tsa.arima.model import ARIMA
+from sklearn.metrics import mean_squared_error
+
+# Data
+df = pd.Series([48, 52, 49, 51, 50, 47, 53, 49, 50, 52, 48, 51])
+
+# Train-Test Split
+train, test = df[:-3], df[-3:]
+
+# Models (AR, MA, ARMA, ARIMA)
+models = {
+    "AR": (1,0,0),
+    "MA": (0,0,1),
+    "ARMA": (1,0,1),
+    "ARIMA": (1,1,1)
+}
+
+results = {}
+
+for name, order in models.items():
+    model = ARIMA(train, order=order).fit()
+    forecast = model.forecast(steps=len(test))
+    
+    # RMSE
+    rmse = np.sqrt(mean_squared_error(test, forecast))
+    results[name] = rmse
+    
+    print(f"{name} RMSE: {rmse:.4f}")
+    
+    # Plot
+    plt.figure()
+    plt.plot(df, marker='o', label='Actual')
+    plt.plot(range(len(train), len(df)), forecast,
+             marker='x', linestyle='--', label=name)
+    plt.title(f"{name} Model")
+    plt.legend()
+    plt.show()
+
+# Best model
+best = min(results, key=results.get)
+print("\nBest Model:", best)
 
 
-# Load dataset
-data = load_iris()
-df = pd.DataFrame(data.data, columns=data.feature_names)
+
+Experiment 6 - Sentiment analysis
+Pip install pandas
+import pandas as pd
+import re
+
+# Predefined datase
+reviews = pd.Series([
+    "This product is amazing and perfect",
+    "Worst experience, very bad quality",
+    "Good value for money, I love it",
+    "Not great, has some problem",
+    "Excellent product, best purchase"
+])
+
+# Word lists
+positive_words = ["good","great","excellent","amazing","love","best","perfect"]
+negative_words = ["bad","worst","poor","terrible","issue","problem","broken"]
+
+print("--- Sentiment Analysis Output ---\n")
+for i, text in enumerate(reviews):
+    words = re.findall(r'\w+', text.lower())
+    
+    pos = sum(w in positive_words for w in words)
+    neg = sum(w in negative_words for w in words)
+    
+    # Method 1 (Normalization)
+    score1 = (pos - neg) / len(words) if words else 0
+    
+    # Method 2 (Semi-normalization)
+    score2 = (pos - neg) / (pos + neg) if (pos + neg) else 0
+    
+    print(f"Review {i+1}: {text}")
+    print(f"Pos: {pos}, Neg: {neg}")
+    print(f"Score1 (Norm): {round(score1,3)} | Score2: {round(score2,3)}\n")
+
+Experiment 7 - different R libraries
+# Libraries
+library(ggplot2)
+library(plotly)
+
+# One dataset
+data <- data.frame(
+  country = c("India","USA","UK","India","USA"),
+  hours = c(10,15,12,9,14),
+  subscription = c("Free","Premium","Free","Premium","Free"),
+  playlists = c(5,8,6,4,7),
+  skips = c(2,3,1,2,4),
+  genre = c("Pop","Rock","Jazz","Pop","Rock"),
+  rating = c(4,5,3,4,5),
+  ads = c("Yes","No","Yes","No","Yes"),
+  age = c(20,25,23,22,27)
+)
+
+# ---------- ggplot ----------
+
+# Bar
+ggplot(data, aes(country, hours, fill=country)) +
+  geom_bar(stat="summary", fun="mean")
+
+# Boxplot
+ggplot(data, aes(subscription, hours)) +
+  geom_boxplot(fill="steelblue")
+
+# Scatter
+ggplot(data, aes(playlists, skips, color=genre)) +
+  geom_point(size=3)
+
+# Facet
+ggplot(data, aes(rating, hours)) +
+  geom_point() +
+  facet_wrap(~ads)
+
+# ---------- plotly ----------
+
+# Bar
+plot_ly(data, x=~country, y=~hours, type='bar', color=~country)
+
+# Scatter
+plot_ly(data, x=~hours, y=~playlists,
+        type='scatter', mode='markers', color=~skips)
+
+# Bubble
+plot_ly(data, x=~age, y=~hours,
+        size=~playlists, color=~subscription,
+        type='scatter', mode='markers')
 
 
-# Add missing values artificially
-df.iloc[0,0] = np.nan
-
-
-# Handle missing values
-df.fillna(df.mean(), inplace=True)
-
-
-# Normalize data
-df_norm = (df - df.min())/(df.max()-df.min())
-
-
-# Graphs
-plt.plot(df['sepal length (cm)'])
-plt.title("Sepal Length Plot")
-plt.show()
-
-
-plt.hist(df['sepal width (cm)'])
-plt.title("Histogram")
-plt.show()
 
 
 
 
-🧾 EXPERIMENT 2
-
-
-Linear regression is used to find the relationship between two variables and plot the best-fit line.
-
-
-from sklearn.datasets import load_iris
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
+Experiment 8 - different python libraries
+# Libraries
+import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
+# One predefined dataset
+df = pd.DataFrame({
+    "math": [78, 85, 90, 60, 72],
+    "reading": [80, 88, 92, 65, 70],
+    "gender": ["F","M","F","M","F"],
+    "cars": ["A","B","C","D","E"],
+    "sales": [30, 20, 25, 15, 10]
+})
+sns.set(style="whitegrid")
 
-data = load_iris()
-X = data.data[:,0].reshape(-1,1)
-y = data.data[:,1]
-
-
-X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2)
-
-
-model = LinearRegression()
-model.fit(X_train,y_train)
-
-
-y_pred = model.predict(X_test)
-
-
-plt.scatter(X_test,y_test,color='red')
-plt.plot(X_test,y_pred,color='blue')
-plt.title("Linear Regression")
+# 1. Scatter Plot
+sns.scatterplot(x="math", y="reading", hue="gender", data=df)
+plt.title("Math vs Reading")
 plt.show()
 
-
-🧾 Exp 3
-Logistic regression classifies data into categories using a sigmoid function.
-
-
-from sklearn.datasets import load_iris
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
-
-
-data = load_iris()
-X = data.data
-y = data.target
-
-
-X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2)
-
-
-model = LogisticRegression(max_iter=200)
-model.fit(X_train,y_train)
-
-
-print("Accuracy:",model.score(X_test,y_test))
-
-
-
-
-🧾 exp 4 - svm
-SVM finds the best boundary (hyperplane) to separate different classes.
-from sklearn.datasets import load_iris
-from sklearn.svm import SVC
-from sklearn.decomposition import PCA
-import matplotlib.pyplot as plt
-
-
-data = load_iris()
-X = data.data
-y = data.target
-
-
-# Reduce to 2D for graph
-pca = PCA(n_components=2)
-X_pca = pca.fit_transform(X)
-
-
-model = SVC(kernel='linear')
-model.fit(X_pca,y)
-
-
-plt.scatter(X_pca[:,0],X_pca[:,1],c=y)
-plt.title("SVM Decision Boundary")
+# 2. Histogram
+sns.histplot(df["math"], bins=5, kde=True)
+plt.title("Math Score Distribution")
 plt.show()
 
-
-🧾 exp 5
-Hebbian learning updates weights based on input-output correlation (“fire together, wire together”).
-
-
-And gate
-import numpy as np
-import matplotlib.pyplot as plt
-
-
-X = np.array([[0,0],[0,1],[1,0],[1,1]])
-y = np.array([0,0,0,1])
-w = np.zeros(2)
-
-
-for i in range(len(X)):
-    w += X[i]*y[i]\
-print("Weights:",w)
-
-
-plt.scatter(X[:,0],X[:,1],c=y)
-plt.title("AND Gate")
+# 3. Count Plot
+sns.countplot(x="gender", data=df)
+plt.title("Gender Count")
 plt.show()
 
-
-OR gate
-y = np.array([0,1,1,1])
-w = np.zeros(2)
-
-
-for i in range(len(X)):
-    w += X[i]*y[i]
-
-
-print("Weights:",w)
-
-
-plt.scatter(X[:,0],X[:,1],c=y)
-plt.title("OR Gate")
-plt.show()
-
-
-🧾 EXp 6 - EM
-EM algorithm groups data into clusters by iteratively estimating and updating parameters.
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.mixture import GaussianMixture
-
-
-# Generate data
-X = np.concatenate([np.random.normal(2,1,200),
-                    np.random.normal(-2,1,200)]).reshape(-1,1)
-
-
-# Model
-model = GaussianMixture(n_components=2)
-model.fit(X)
-
-
-# Plot
-plt.hist(X,bins=30)
-plt.title("Data Distribution")
+# 4. Pie Chart
+plt.pie(df["sales"], labels=df["cars"], autopct="%1.1f%%")
+plt.title("Car Sales Distribution")
+plt.axis("equal")
 plt.show()
 
 
 
+Experiment 1 
 
-🧾 exp 7
-MCP model uses threshold logic to simulate neurons and implement logical gates.
-def mcp(x1,x2,theta):
-    return 1 if (x1+x2)>=theta else 0
+🔹 Why Python?
+Easy to learn and readable
+Used for machine learning & AI
+Supports integration with databases & APIs
+Multi-purpose language
 
+🔹 Why R?
+Strong for statistical analysis
+Excellent visualization (ggplot2)
+Good for research work
+Supports reproducible reports
 
-inputs = [(0,0),(0,1),(1,0),(1,1)]
+🔹 R vs Python (Very Short)
+Feature            R	Python
+Focus	  Statistics	General-purpose
+Learning	   Harder	Easier
+Visualization	Better	Good
+ML/AI	       Limited	Strong
 
+🔹 Important Python Libraries
+NumPy → numerical operations
+Pandas → data handling
+Matplotlib → plotting
+Scikit-learn → machine learning
+Flask → web apps
 
-print("AND Gate")
-for i in inputs:
-    print(i,mcp(i[0],i[1],2))
-
-
-print("OR Gate")
-for i in inputs:
-    print(i,mcp(i[0],i[1],1))
-
-
-🧾 exp 8
-Perceptron is a linear classifier that separates data using weights and bias.
-from sklearn.linear_model import Perceptron
-from sklearn.datasets import load_iris
-import matplotlib.pyplot as plt
-
-
-data = load_iris()
-X = data.data[:, :2]
-y = data.target
-
-
-model = Perceptron()
-model.fit(X,y)
-
-
-plt.scatter(X[:,0],X[:,1],c=y)
-plt.title("Perceptron Classification")
-plt.show()
-
-
-🧾 exp 9
-PCA reduces the number of features while preserving important information.
-from sklearn.decomposition import PCA
-from sklearn.datasets import load_iris
-import matplotlib.pyplot as plt
-
-
-data = load_iris()
-X = data.data
-y = data.target
-
-
-pca = PCA(n_components=2)
-X_new = pca.fit_transform(X)
-
-
-plt.scatter(X_new[:,0],X_new[:,1],c=y)
-plt.title("PCA Visualization")
-plt.show()
+🔹 Important R Libraries
+ggplot2 → visualization
+dplyr → data manipulation
+tidytext → text analysis
+magick → image processing
+fs → file handling
